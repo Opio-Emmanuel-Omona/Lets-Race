@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Let\'s Race</string>
+    <string name="avatar">Profile Picture</string>
+    <string name="username">Username</string>
+    <string name="submit">submit</string>
+    <string name="phone_number">+256703391199</string>
+    <string name="height_in_cm">height in cm</string>
+    <string name="weight_in_kg">weight in KG</string>
 </resources>

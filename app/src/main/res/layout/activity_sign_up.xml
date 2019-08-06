@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".SignUp">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="56dp">
@@ -27,11 +27,23 @@
                 android:contentDescription="@string/avatar"
                 android:layout_centerInParent="true"
                 android:layout_marginBottom="50dp"
-                android:src="@mipmap/ic_launcher"
+                android:src="@drawable/click_here"
                 tools:srcCompat="@tools:sample/avatars" />
 
 
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/usernameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginLeft="48dp"
+            android:layout_marginTop="26dp"
+            android:fontFamily="sans-serif-black"
+            android:text="@string/username"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/avatarLayout" />
 
         <EditText
             android:id="@+id/username"
@@ -39,14 +51,26 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="48dp"
             android:layout_marginLeft="48dp"
-            android:layout_marginTop="52dp"
             android:ems="10"
-            android:imeOptions="actionDone"
-            android:inputType="textPersonName"
             android:hint="@string/username"
+            android:imeOptions="actionDone"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/avatarLayout"
-            android:importantForAutofill="no" tools:targetApi="o" />
+            app:layout_constraintTop_toBottomOf="@id/usernameLabel"
+            tools:targetApi="o" />
+
+        <TextView
+            android:id="@+id/phone_numberLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginLeft="48dp"
+            android:layout_marginTop="26dp"
+            android:fontFamily="sans-serif-black"
+            android:text="@string/phone_number_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/username" />
 
         <EditText
             android:id="@+id/phone_number"
@@ -54,14 +78,25 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="48dp"
             android:layout_marginLeft="48dp"
-            android:layout_marginTop="52dp"
             android:ems="10"
             android:imeOptions="actionDone"
             android:inputType="phone"
             android:hint="@string/phone_number"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/username"
+            app:layout_constraintTop_toBottomOf="@id/phone_numberLabel"
             android:importantForAutofill="no" tools:targetApi="o" />
+
+        <TextView
+            android:id="@+id/weightLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginLeft="48dp"
+            android:layout_marginTop="26dp"
+            android:fontFamily="sans-serif-black"
+            android:text="@string/weight_in_kg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/phone_number" />
 
         <EditText
             android:id="@+id/weight"
@@ -69,14 +104,25 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="48dp"
             android:layout_marginLeft="48dp"
-            android:layout_marginTop="52dp"
             android:ems="10"
             android:imeOptions="actionDone"
             android:inputType="number"
             android:hint="@string/weight_in_kg"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/phone_number"
+            app:layout_constraintTop_toBottomOf="@+id/weightLabel"
             android:importantForAutofill="no" tools:targetApi="o" />
+
+        <TextView
+            android:id="@+id/heightLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginLeft="48dp"
+            android:layout_marginTop="26dp"
+            android:fontFamily="sans-serif-black"
+            android:text="@string/height_in_cm"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/weight" />
 
         <EditText
             android:id="@+id/height"
@@ -84,13 +130,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="48dp"
             android:layout_marginLeft="48dp"
-            android:layout_marginTop="52dp"
             android:ems="10"
             android:imeOptions="actionDone"
             android:inputType="number"
             android:hint="@string/height_in_cm"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/weight"
+            app:layout_constraintTop_toBottomOf="@+id/heightLabel"
             android:importantForAutofill="no" tools:targetApi="o" />
 
         <Button
@@ -102,8 +147,8 @@
             android:layout_marginTop="56dp"
             android:text="@string/submit"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/height" />
+            app:layout_constraintTop_toBottomOf="@id/height" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

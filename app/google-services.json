@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "469077495018",
+    "firebase_url": "https://lets-race-5ce1a.firebaseio.com",
+    "project_id": "lets-race-5ce1a",
+    "storage_bucket": "lets-race-5ce1a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:469077495018:android:20393b0bd5ce5abc",
+        "android_client_info": {
+          "package_name": "com.example.letsrace"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "469077495018-p29a0d80qvhaolv3gvji7smoqkin15a8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.letsrace",
+            "certificate_hash": "ba0e12e5110319d390fea566ecd679053b0c20aa"
+          }
+        },
+        {
+          "client_id": "469077495018-4d6dd0hgjjrjfv5humf7f1c9iqc86pkl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfre3XU3A4t1l79aMVU_Xpxuo1KT6EhNI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "469077495018-4d6dd0hgjjrjfv5humf7f1c9iqc86pkl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

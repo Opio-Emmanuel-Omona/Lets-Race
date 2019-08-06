@@ -7,13 +7,21 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,17 +34,22 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class SignUp extends AppCompatActivity {
 
     private static final String PROF_PREF = "PROFILE";
-    private static final String AVATAR = "AVATAR";
+    private static final String TAG = "Firebase";
     private static final String USERNAME = "USERNAME";
     private static final String PHONE = "PHONE";
     private static final String HEIGHT = "HEIGHT";
     private static final String WEIGHT = "WEIGHT";
 
+    String user;
+    String phone;
+    String weight;
+    String height;
+
     CircleImageView avatarImg;
     EditText usernameTxt;
     EditText phoneNumber;
-    EditText heightTxt;
     EditText weightTxt;
+    EditText heightTxt;
     Button submit;
 
     Uri selectedImageUri;
@@ -62,8 +75,8 @@ public class SignUp extends AppCompatActivity {
 
         usernameTxt.setImeOptions(EditorInfo.IME_ACTION_DONE);
         phoneNumber.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        heightTxt.setImeOptions(EditorInfo.IME_ACTION_DONE);
         weightTxt.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        heightTxt.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
         populateFields();
 
@@ -75,6 +88,10 @@ public class SignUp extends AppCompatActivity {
                     Toast.makeText(SignUp.this, "All fields required", Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.putExtra("username", user);
+                    intent.putExtra("phone", phone);
+                    intent.putExtra("weight", weight);
+                    intent.putExtra("height", height);
                     startActivity(intent);
                 }
             }
@@ -89,6 +106,21 @@ public class SignUp extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(intent,"Select file to upload "), 10);
             }
         });
+
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+                        Log.d(TAG, "" + FirebaseInstanceId.getInstance().getInstanceId());
+                    }
+                });
     }
 
     private void populateFields() {
@@ -96,10 +128,8 @@ public class SignUp extends AppCompatActivity {
             loadAvatar();
             usernameTxt.setText(pref.getString(USERNAME, ""));
             phoneNumber.setText(pref.getString(PHONE, ""));
-            heightTxt.setText(String.format(Locale.ENGLISH, "%s %s"
-                    , pref.getString(HEIGHT, ""), "Kg"));
-            weightTxt.setText(String.format(Locale.ENGLISH, "%s %s"
-                    ,pref.getString(WEIGHT, ""), "cm"));
+            weightTxt.setText(pref.getString(WEIGHT, " "));
+            heightTxt.setText(pref.getString(HEIGHT,""));
         }
     }
 
@@ -114,8 +144,6 @@ public class SignUp extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
-
-
     }
 
     private boolean verifyPreferences() {
@@ -125,10 +153,10 @@ public class SignUp extends AppCompatActivity {
     private void saveToPref() {
 
         BitmapDrawable avatar = (BitmapDrawable) avatarImg.getDrawable();
-        String user = this.usernameTxt.getText().toString();
-        String phone = this.phoneNumber.getText().toString();
-        String height = this.heightTxt.getText().toString();
-        String weight = this.weightTxt.getText().toString();
+        user = this.usernameTxt.getText().toString();
+        phone = this.phoneNumber.getText().toString();
+        weight = this.weightTxt.getText().toString();
+        height = this.heightTxt.getText().toString();
 
         profilePref = getSharedPreferences(PROF_PREF, MODE_PRIVATE).edit();
         profilePref.clear();
@@ -136,8 +164,8 @@ public class SignUp extends AppCompatActivity {
         if (avatar != null) saveImage(avatar);
         if (!user.equals("")) profilePref.putString(USERNAME, user);
         if (!phone.equals("")) profilePref.putString(PHONE, phone);
-        if (!height.equals("")) profilePref.putString(HEIGHT, height);
         if (!weight.equals("")) profilePref.putString(WEIGHT, weight);
+        if (!height.equals("")) profilePref.putString(HEIGHT, height);
         profilePref.apply();
     }
 
@@ -155,6 +183,7 @@ public class SignUp extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),
                     "Go to Settings, Select the Application and turn on permissions",
                     Toast.LENGTH_LONG).show();
+            return;
         }
 
         File file =  new File(dir, "avatar.jpg");

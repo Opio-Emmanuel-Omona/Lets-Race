@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,9 +16,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static com.example.letsrace.SignUp.person;
 import static com.example.letsrace.service.RealTimeDatabase.DATA_PREF;
@@ -33,10 +30,35 @@ public class Running extends AppCompatActivity {
     DatabaseReference myRef;
 
     int distanceCounter = 0;
-    Long timerCounter = 0L;
+    long timerCounter = 0;
+    long startTime = 0;
     int mInterval = 10000;
 
-    Handler mHandler;
+    Handler runningHandler;
+    Runnable runningRunnable = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                updatePosition();
+            } finally {
+                runningHandler.postDelayed(runningRunnable, mInterval);
+            }
+        }
+    };
+
+    Handler timerHandler;
+    Runnable timerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            long millis = System.currentTimeMillis() - startTime;
+            int seconds = (int) (millis / 1000);
+            int minutes = seconds / 60;
+            seconds = seconds % 60;
+            timerCounter = seconds;
+            timer.setText(String.format("%02d:%02d", minutes, seconds));
+            timerHandler.postDelayed(timerRunnable, 500);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +72,9 @@ public class Running extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("running");
 
-        mHandler = new Handler();
+        runningHandler = new Handler();
+        timerHandler = new Handler();
+        startTime = System.currentTimeMillis();
 
         start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,23 +102,14 @@ public class Running extends AppCompatActivity {
         });
     }
 
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                updatePosition();
-            } finally {
-                mHandler.postDelayed(runnable, mInterval);
-            }
-        }
-    };
-
     private void startUpdating() {
-        runnable.run();
+        runningRunnable.run();
+        timerRunnable.run();
     }
 
     private void stopUpdating() {
-        mHandler.removeCallbacks(runnable);
+        runningHandler.removeCallbacks(runningRunnable);
+        timerHandler.removeCallbacks(timerRunnable);
     }
 
     private void  updatePosition() {
@@ -102,7 +117,7 @@ public class Running extends AppCompatActivity {
         String key = prefs.getString("key", "");
 
         person.setDistanceCovered(++distanceCounter);
-        person.setTimeSpent(++timerCounter);
+        person.setTimeSpent(timerCounter);
 
         myRef.child(key).setValue(person);
     }

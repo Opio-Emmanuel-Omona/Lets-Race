@@ -7,4 +7,9 @@
     <string name="phone_number">+256703391199</string>
     <string name="height_in_cm">height in cm</string>
     <string name="weight_in_kg">weight in KG</string>
+    <string name="choose_activity">Choose Activity</string>
+    <string name="running">Running</string>
+    <string name="timer">0:00:00</string>
+    <string name="distance">0 m</string>
+    <string name="start">Start</string>
 </resources>

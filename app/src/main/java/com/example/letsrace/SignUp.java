@@ -18,6 +18,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.letsrace.model.Person;
+import com.example.letsrace.service.RealTimeDatabase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -27,11 +29,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SignUp extends AppCompatActivity {
+
+    public static Person person;
 
     private static final String PROF_PREF = "PROFILE";
     private static final String TAG = "Firebase";
@@ -59,6 +62,8 @@ public class SignUp extends AppCompatActivity {
     SharedPreferences pref;
     SharedPreferences.Editor profilePref;
 
+    RealTimeDatabase realTimeDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,16 +72,18 @@ public class SignUp extends AppCompatActivity {
         avatarImg = findViewById(R.id.avatar);
         usernameTxt = findViewById(R.id.username);
         phoneNumber = findViewById(R.id.phone_number);
-        heightTxt = findViewById(R.id.height);
         weightTxt = findViewById(R.id.weight);
+        heightTxt = findViewById(R.id.height);
         submit = findViewById(R.id.submit);
 
         pref = getSharedPreferences(PROF_PREF, MODE_PRIVATE);
 
-        usernameTxt.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        phoneNumber.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        weightTxt.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        usernameTxt.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        phoneNumber.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        weightTxt.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         heightTxt.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        realTimeDatabase = new RealTimeDatabase();
 
         populateFields();
 
@@ -88,10 +95,8 @@ public class SignUp extends AppCompatActivity {
                     Toast.makeText(SignUp.this, "All fields required", Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    intent.putExtra("username", user);
-                    intent.putExtra("phone", phone);
-                    intent.putExtra("weight", weight);
-                    intent.putExtra("height", height);
+                    person = new Person(user, weight, height, 0, 0L);
+                    realTimeDatabase.updatePosition(person, getApplicationContext());
                     startActivity(intent);
                 }
             }
@@ -222,6 +227,4 @@ public class SignUp extends AppCompatActivity {
 
         }
     }
-
-
 }

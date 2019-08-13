@@ -22,7 +22,7 @@ public class Person {
     }
 
     public String getWeight() {
-        return height;
+        return weight;
     }
 
     public String getHeight() {
